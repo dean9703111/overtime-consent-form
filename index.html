@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>自主加班同意書</title>
+    <!-- Tailwind Play CDN（純前端即可用） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React 18 UMD 與 ReactDOM UMD -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel Standalone：讓瀏覽器能直接吃 JSX（開發/展示可；正式建議打包） -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <!-- 你的 React 程式碼（把畫布中的元件貼進來；去掉 export default 與 import） -->
+    <script type="text/babel">
+      const { useEffect, useRef, useState } = React;
+
+      function OvertimeConsentApp() {
+        const [agreed, setAgreed] = useState(false);
+        const [disPos, setDisPos] = useState({ x: 24, y: 24 });
+        const [disScale, setDisScale] = useState(1);
+        const [teleporting, setTeleporting] = useState(false);
+
+        const containerRef = useRef(null);
+        const disagreeRef = useRef(null);
+
+        const getRandomPos = () => {
+          const container = containerRef.current;
+          const btn = disagreeRef.current;
+          if (!container || !btn) return { x: 24, y: 24 };
+
+          const wrap = container.getBoundingClientRect();
+          const b = btn.getBoundingClientRect();
+          const maxX = Math.max(0, wrap.width - b.width);
+          const maxY = Math.max(0, wrap.height - b.height);
+          const x = Math.floor(Math.random() * maxX);
+          const y = Math.floor(Math.random() * maxY);
+          return { x, y };
+        };
+
+        const moveDisagreeAway = (e) => {
+          const container = containerRef.current;
+          const btn = disagreeRef.current;
+          if (!container || !btn || teleporting) return;
+
+          const wrap = container.getBoundingClientRect();
+          const b = btn.getBoundingClientRect();
+          const mouseX = e.clientX - wrap.left;
+          const mouseY = e.clientY - wrap.top;
+          const centerX = b.left - wrap.left + b.width / 2;
+          const centerY = b.top - wrap.top + b.height / 2;
+          const dx = mouseX - centerX;
+          const dy = mouseY - centerY;
+          const dist = Math.hypot(dx, dy);
+
+          const dangerRadius = 140;
+          if (dist < dangerRadius) setDisPos(getRandomPos());
+        };
+
+        const instantTeleport = () => {
+          if (teleporting) return;
+          setTeleporting(true);
+          const jumps = 3;
+          let i = 0;
+          const hop = () => {
+            setDisPos(getRandomPos());
+            i += 1;
+            if (i < jumps) setTimeout(hop, 130);
+            else setTeleporting(false);
+          };
+          hop();
+        };
+
+        const onDisagreeClick = () => {
+          instantTeleport();
+          setDisScale((s) => Math.max(0.5, +(s * 0.5).toFixed(2)));
+        };
+
+        useEffect(() => {
+          const container = containerRef.current;
+          if (!container) return;
+          const handler = (e) => moveDisagreeAway(e);
+          container.addEventListener("mousemove", handler);
+          return () => container.removeEventListener("mousemove", handler);
+        }, [teleporting]);
+
+        useEffect(() => {
+          const alignRightCenter = () => {
+            const container = containerRef.current;
+            const btn = disagreeRef.current;
+            if (!container || !btn) return;
+            const wrap = container.getBoundingClientRect();
+            const b = btn.getBoundingClientRect();
+            
+            if (window.innerWidth < 768) {
+              // 手機版：上下排列，間隔 15px
+              const x = Math.max(24, wrap.width / 2 - b.width / 2);
+              const y = Math.max(24, wrap.height * 0.65 - b.height / 2);
+              setDisPos({ x, y });
+            } else {
+              // 桌面版：左右排列
+              const x = Math.max(24, wrap.width * 0.70 - b.width / 2);
+              const y = Math.max(24, (wrap.height - b.height) / 2);
+              setDisPos({ x, y });
+            }
+          };
+          requestAnimationFrame(alignRightCenter);
+          window.addEventListener("resize", alignRightCenter);
+          return () => window.removeEventListener("resize", alignRightCenter);
+        }, []);
+
+        if (agreed) {
+          return (
+            <>
+              <div className="min-h-screen w-full bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 flex items-center justify-center p-6">
+                <div className="max-w-2xl w-full rounded-3xl bg-white/10 backdrop-blur-xl shadow-2xl border border-white/20 p-10 text-center">
+                  <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
+                    <span className="text-3xl">🙏</span>
+                  </div>
+                  <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-4">
+                    公司感謝您的辛勞
+                  </h1>
+                  <p className="text-white/90 text-base md:text-lg leading-relaxed mb-8">
+                    您已成功提交「自主加班同意書」。
+                    <br />
+                    願滿天星光照亮您加班的每一刻（與通勤的最後一班車）。
+                  </p>
+                  <button
+                    onClick={() => setAgreed(false)}
+                    className="px-5 py-3 rounded-2xl bg-white/90 hover:bg-white text-slate-800 font-medium shadow-lg transition active:scale-[0.98]"
+                  >
+                    返回上一頁
+                  </button>
+                </div>
+              </div>
+            </>
+          );
+        }
+
+        return (
+          <>
+            <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.25),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(244,63,94,0.25),transparent_50%)] bg-slate-950 flex items-center justify-center p-6 relative">
+              {/* 頂部 Banner */}
+              <div className="absolute top-0 left-0 right-0 px-6 py-4 bg-white/10 backdrop-blur-sm border-b border-white/20 flex items-center">
+                <span className="text-white/90 text-base font-medium">黑寶科技人資管理系統</span>
+                <div className="flex items-center space-x-3 ml-4">
+                  <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a href="https://github.com/dean9703111/overtime-consent-form" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                  </a>
+                </div>
+              </div>
+              <div className="relative max-w-3xl w-full">
+                <div className="rounded-3xl bg-white/10 backdrop-blur-xl shadow-2xl border border-white/15 overflow-hidden">
+                  <div className="p-8 md:p-12 relative">
+                    <div className="absolute -top-10 -right-10 h-40 w-40 bg-white/10 blur-2xl rounded-full" />
+                    <h1 className="text-3xl md:text-4xl font-bold text-white tracking-tight text-center">
+                      自主加班同意書
+                    </h1>
+                    <p className="mt-10 text-white/80 md:text-lg leading-relaxed">
+                      為維護公司運作與專案進度，本人已充分了解並自願同意於必要時段內配合加班。
+                      如有疑義，請立即與主管或人資窗口聯繫。
+                    </p>
+                  </div>
+
+                  <div
+                    ref={containerRef}
+                    className="relative mx-2 md:mx-6 h-50 md:h-40 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 border border-white/15 overflow-hidden"
+                  >
+                    <button
+                      onClick={() => setAgreed(true)}
+                      className="group px-8 py-4 rounded-2xl bg-emerald-400/90 hover:bg-emerald-300 text-emerald-950 font-semibold shadow-[0_10px_30px_rgba(16,185,129,0.35)] transition active:scale-[0.98]"
+                      aria-label="同意加班"
+                      style={{ 
+                        position: "absolute", 
+                        left: window.innerWidth < 768 ? "50%" : "30%", 
+                        top: window.innerWidth < 768 ? "25%" : "50%", 
+                        transform: window.innerWidth < 768 ? "translateX(-50%)" : "translateY(-50%)" 
+                      }}
+                    >
+                      同意
+                      <span className="ml-2 inline-block transition group-hover:translate-x-0.5">→</span>
+                    </button>
+
+                    <button
+                      ref={disagreeRef}
+                      onClick={onDisagreeClick}
+                      onMouseEnter={moveDisagreeAway}
+                      style={{
+                        position: "absolute",
+                        left: disPos.x,
+                        top: disPos.y,
+                        transform: `scale(${disScale})`,
+                      }}
+                      className={`
+                        select-none px-8 py-4 rounded-2xl
+                        bg-white/80 hover:bg-white text-slate-800 text-base font-semibold
+                        shadow-lg border border-white/80 transition-all duration-200
+                        ${teleporting ? "pointer-events-none" : ""}
+                      `}
+                      aria-label="不同意（會躲貓貓）"
+                      title="想按我？抓不到～"
+                    >
+                      不同意
+                    </button>
+
+                    <div className="absolute bottom-2 right-3 text-[11px] text-white/60">
+                      * 小提醒：不同意按鈕具有高機動性。
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pb-6 pl-6 text-white/60 text-xs">
+                    <span>此頁僅供娛樂，請勿作為正式法定文件。</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<OvertimeConsentApp />);
+    </script>
+  </body>
+</html>
