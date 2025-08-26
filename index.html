@@ -4,6 +4,13 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>自主加班同意書</title>
+    <link rel="icon" type="image/png" href="https://deanlin.net/images/favicon.png">
+    <meta name="description" content="當「同意」比「不同意」更容易的時候，你就知道這是黑寶科技設計的網頁了。">
+    <meta property="og:image" content="https://deanlin.net/overtime-consent-form/preview.png">
+    <meta property="og:title" content="自主加班同意書">
+    <meta property="og:description" content="當「同意」比「不同意」更容易的時候，你就知道這是黑寶科技設計的網頁了。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://deanlin.net/overtime-consent-form/">
     <!-- Tailwind Play CDN（純前端即可用） -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React 18 UMD 與 ReactDOM UMD -->
@@ -77,7 +84,7 @@
 
         const onDisagreeClick = () => {
           instantTeleport();
-          setDisScale((s) => Math.max(0.5, +(s * 0.5).toFixed(2)));
+          setDisScale((s) => Math.max(0.3, +(s * 0.8).toFixed(2)));
         };
 
         useEffect(() => {
@@ -96,17 +103,10 @@
             const wrap = container.getBoundingClientRect();
             const b = btn.getBoundingClientRect();
             
-            if (window.innerWidth < 768) {
-              // 手機版：上下排列，間隔 15px
-              const x = Math.max(24, wrap.width / 2 - b.width / 2);
-              const y = Math.max(24, wrap.height * 0.65 - b.height / 2);
-              setDisPos({ x, y });
-            } else {
-              // 桌面版：左右排列
-              const x = Math.max(24, wrap.width * 0.70 - b.width / 2);
-              const y = Math.max(24, (wrap.height - b.height) / 2);
-              setDisPos({ x, y });
-            }
+            // 手機版和桌面版都使用橫式排列，右側 10% 位置
+            const x = Math.max(24, wrap.width * 0.90 - b.width);
+            const y = Math.max(24, (wrap.height - b.height) / 2);
+            setDisPos({ x, y });
           };
           requestAnimationFrame(alignRightCenter);
           window.addEventListener("resize", alignRightCenter);
@@ -116,7 +116,28 @@
         if (agreed) {
           return (
             <>
-              <div className="min-h-screen w-full bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 flex items-center justify-center p-6">
+              <div className="min-h-screen w-full bg-gradient-to-br from-indigo-500 via-purple-500 to-rose-500 flex items-center justify-center p-6 relative pt-20">
+                {/* 頂部 Banner */}
+                <div className="absolute top-0 left-0 right-0 px-6 py-4 bg-white/10 backdrop-blur-sm border-b border-white/20 flex items-center">
+                  <span className="text-white/90 text-base font-medium">黑寶科技人資管理系統</span>
+                                  <div className="flex items-center space-x-3 ml-4">
+                  <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a href="https://www.youtube.com/@dlcorner" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                    </svg>
+                  </a>
+                  <a href="https://github.com/dean9703111/overtime-consent-form" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                    </svg>
+                  </a>
+                </div>
+                </div>
                 <div className="max-w-2xl w-full rounded-3xl bg-white/10 backdrop-blur-xl shadow-2xl border border-white/20 p-10 text-center">
                   <div className="mx-auto mb-6 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-white/20">
                     <span className="text-3xl">🙏</span>
@@ -129,12 +150,25 @@
                     <br />
                     願滿天星光照亮您加班的每一刻（與通勤的最後一班車）。
                   </p>
-                  <button
-                    onClick={() => setAgreed(false)}
-                    className="px-5 py-3 rounded-2xl bg-white/90 hover:bg-white text-slate-800 font-medium shadow-lg transition active:scale-[0.98]"
-                  >
-                    返回上一頁
-                  </button>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button
+                      onClick={() => setAgreed(false)}
+                      className="px-5 py-3 rounded-2xl bg-white/90 hover:bg-white text-slate-800 font-medium shadow-lg transition active:scale-[0.98]"
+                    >
+                      返回上一頁
+                    </button>
+                    <a
+                      href="https://www.youtube.com/@dlcorner"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-5 py-3 rounded-2xl bg-red-500/90 hover:bg-red-400 text-white font-medium shadow-lg transition active:scale-[0.98] flex items-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                      </svg>
+                      追蹤作者
+                    </a>
+                  </div>
                 </div>
               </div>
             </>
@@ -143,7 +177,7 @@
 
         return (
           <>
-            <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.25),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(244,63,94,0.25),transparent_50%)] bg-slate-950 flex items-center justify-center p-6 relative">
+            <div className="min-h-screen w-full bg-[radial-gradient(ellipse_at_top_left,rgba(99,102,241,0.25),transparent_50%),radial-gradient(ellipse_at_bottom_right,rgba(244,63,94,0.25),transparent_50%)] bg-slate-950 flex items-center justify-center p-6 relative pt-20">
               {/* 頂部 Banner */}
               <div className="absolute top-0 left-0 right-0 px-6 py-4 bg-white/10 backdrop-blur-sm border-b border-white/20 flex items-center">
                 <span className="text-white/90 text-base font-medium">黑寶科技人資管理系統</span>
@@ -151,6 +185,11 @@
                   <a href="https://www.facebook.com/deanlinbao" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
                     <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                  </a>
+                  <a href="https://www.youtube.com/@dlcorner" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
+                    <svg className="w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
                     </svg>
                   </a>
                   <a href="https://github.com/dean9703111/overtime-consent-form" target="_blank" rel="noopener noreferrer" className="p-1.5 hover:bg-white/20 rounded-lg transition-colors">
@@ -175,7 +214,7 @@
 
                   <div
                     ref={containerRef}
-                    className="relative mx-2 md:mx-6 h-50 md:h-40 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 border border-white/15 overflow-hidden"
+                    className="relative mx-2 md:mx-6 h-40 md:h-40 rounded-2xl bg-gradient-to-r from-white/10 to-white/5 border border-white/15 overflow-hidden"
                   >
                     <button
                       onClick={() => setAgreed(true)}
@@ -183,9 +222,12 @@
                       aria-label="同意加班"
                       style={{ 
                         position: "absolute", 
-                        left: window.innerWidth < 768 ? "50%" : "30%", 
-                        top: window.innerWidth < 768 ? "25%" : "50%", 
-                        transform: window.innerWidth < 768 ? "translateX(-50%)" : "translateY(-50%)" 
+                        left: "10%", 
+                        top: "50%", 
+                        transform: "translateY(-50%)",
+                        minWidth: window.innerWidth >= 768 ? "144px" : "96px",
+                        fontSize: window.innerWidth >= 768 ? "1.2em" : "0.8em",
+                        padding: window.innerWidth >= 768 ? "1.25rem 2rem" : "0.8rem 1.6rem"
                       }}
                     >
                       同意
@@ -201,6 +243,9 @@
                         left: disPos.x,
                         top: disPos.y,
                         transform: `scale(${disScale})`,
+                        minWidth: window.innerWidth >= 768 ? "144px" : "96px",
+                        fontSize: window.innerWidth >= 768 ? "1.2em" : "0.8em",
+                        padding: window.innerWidth >= 768 ? "1.25rem 2rem" : "0.8rem 1.6rem"
                       }}
                       className={`
                         select-none px-8 py-4 rounded-2xl

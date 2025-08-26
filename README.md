@@ -5,7 +5,13 @@
 ---
 
 ## 🚀 Demo
-👉 [線上試玩](https://deanlin.net//overtime-consent-form/)
+👉 [線上試玩](https://deanlin.net/overtime-consent-form/)
+
+[img](./img/index.png)
+
+[img](./img/play.png)
+
+[img](./img/thank.png)
 
 ---
 
@@ -13,5 +19,5 @@
 - **同意按鈕**：一鍵直達「公司感謝您的辛勞」畫面，溫馨又無法拒絕 ❤️  
 - **不同意按鈕**：  
   - 一開始和「同意」一樣大，看似公平。  
-  - 但會 **亂跑、閃避滑鼠、越點越小**。  
+  - 但會 **亂跑、閃避滑鼠、越點越小（最小值為 30%）**。  
   - 想點？抱歉，這世界就是這麼不公平。  
