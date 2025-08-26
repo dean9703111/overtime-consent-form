@@ -7,11 +7,11 @@
 ## 🚀 Demo
 👉 [線上試玩](https://deanlin.net/overtime-consent-form/)
 
-[img](./img/index.png)
+![img](./img/index.png)
 
-[img](./img/play.png)
+![img](./img/play.png)
 
-[img](./img/thank.png)
+![img](./img/thank.png)
 
 ---
 
